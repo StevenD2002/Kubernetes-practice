@@ -2,16 +2,28 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World")
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("got / request\n")
+	io.WriteString(w, "Hello World!\n")
+}
+
+func getHello(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("got /hello request\n")
+	io.WriteString(w, "Hello, HTTP!\n")
 }
 
 func main() {
-	http.HandleFunc("/", helloHandler)
-	http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/", getRoot)
+	http.HandleFunc("/hello", getHello)
 
-	fmt.Println("Server started on port 8080")
+	err := http.ListenAndServe(":3333", nil)
+	if err != nil {
+		fmt.Printf("Error starting server: %s\n", err)
+		os.Exit(1)
+	}
 }
