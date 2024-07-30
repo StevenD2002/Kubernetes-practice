@@ -18,8 +18,8 @@ func getHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", getRoot)
-	http.HandleFunc("/hello", getHello)
+	http.HandleFunc("/api/", getRoot)
+	http.HandleFunc("/api/hello", getHello)
 
 	err := http.ListenAndServe(":3333", nil)
 	if err != nil {
