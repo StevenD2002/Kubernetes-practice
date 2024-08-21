@@ -1,9 +1,8 @@
-apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world-deployment
+  name: redis-writer-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: hello-world
@@ -17,7 +16,7 @@ spec:
         image: go-hello-world:latest
         imagePullPolicy: Never
         ports:
-        - containerPort: 3333
+        - containerPort: 8080
 
 ---
 
@@ -31,27 +30,6 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3333
-  type: ClusterIP
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: hello-world-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: poop
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: hello-world-service
-            port:
-              number: 80
+      targetPort: 8080
+  type: LoadBalancer
 
